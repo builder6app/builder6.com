@@ -15,86 +15,108 @@
             width: 375px !important;
             height: 667px !important;
             margin: auto;
-            border: 8px solid #1f2937;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 12px solid #1c1c1e;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .mobile-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 24px;
+            background: #1c1c1e;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            z-index: 10;
         }
         
         .mobile-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f3f4f6;
+            background-color: #000;
+            background-image: radial-gradient(circle at center, #1c1c1e 0%, #000 100%);
             padding: 20px;
         }
     </style>
 </head>
-<body class="flex flex-col h-screen bg-gray-900 text-white">
+<body class="flex flex-col h-screen bg-black text-white font-sans antialiased selection:bg-blue-500 selection:text-white overflow-hidden">
 
-    <header class="flex items-center justify-between px-6 py-3 border-b border-gray-700 bg-gray-800">
-        <div class="flex items-center gap-2">
-            <img src="/logo.svg" alt="Logo" class="w-6 h-6">
-            <h1 class="font-bold text-lg tracking-tight">Page Builder <span class="text-xs font-normal text-gray-400 ml-1">(Liquid)</span></h1>
+    <header class="flex items-center justify-between px-6 py-3 border-b border-white/10 bg-[#1c1c1e]/80 backdrop-blur-xl z-50">
+        <div class="flex items-center gap-3">
+            <img src="/logo.svg" alt="Logo" class="w-8 h-8 drop-shadow-md">
+            <h1 class="font-semibold text-lg tracking-tight text-white">Page Builder <span class="text-xs font-normal text-gray-400 ml-1 bg-white/10 px-2 py-0.5 rounded-full">Liquid</span></h1>
         </div>
         <div class="flex items-center gap-4">
             <!-- Layout Controls -->
-            <div class="flex items-center bg-gray-700 rounded-lg p-1 gap-1">
-                <button id="layoutLeftRight" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white active-layout" title="Split Left/Right">
+            <div class="flex items-center bg-black/20 rounded-lg p-1 gap-1 border border-white/5">
+                <button id="layoutLeftRight" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white active-layout transition-colors" title="Split Left/Right">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
                 </button>
-                <button id="layoutTopBottom" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white" title="Split Top/Bottom">
+                <button id="layoutTopBottom" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors" title="Split Top/Bottom">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <button id="layoutPreview" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white" title="Preview Only">
+                <button id="layoutPreview" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors" title="Preview Only">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                 </button>
             </div>
 
             <!-- Preview Mode Controls -->
-            <div class="flex items-center bg-gray-700 rounded-lg p-1 gap-1">
-                <button id="modeDesktop" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white active-mode" title="Desktop View">
+            <div class="flex items-center bg-black/20 rounded-lg p-1 gap-1 border border-white/5">
+                <button id="modeDesktop" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white active-mode transition-colors" title="Desktop View">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 </button>
-                <button id="modeMobile" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white" title="Mobile View">
+                <button id="modeMobile" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors" title="Mobile View">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                 </button>
-                <button id="openNewTab" class="p-1.5 rounded hover:bg-gray-600 text-gray-400 hover:text-white" title="Open in new tab">
+                <button id="openNewTab" class="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors" title="Open in new tab">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </button>
             </div>
 
-            <button id="saveBtn" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-1.5 rounded text-sm font-medium transition flex items-center gap-2">
+            <div class="h-6 w-px bg-white/10 mx-1"></div>
+
+            <button id="saveBtn" class="bg-[#007AFF] hover:bg-[#0062cc] text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 flex items-center gap-2 transform active:scale-95">
                 <span>Save</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
             </button>
 
-            <button id="shareBtn" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded text-sm font-medium transition flex items-center gap-2">
+            <button id="shareBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 backdrop-blur-sm border border-white/5">
                 <span>Share</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
             </button>
 
-            <button id="historyBtn" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded text-sm font-medium transition flex items-center gap-2">
+            <button id="historyBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 backdrop-blur-sm border border-white/5">
                 <span>History</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </button>
 
             <!-- Auth UI -->
-            <div id="authContainer" class="flex items-center gap-2 ml-2 border-l border-gray-700 pl-4">
-                <a href="/login" id="signInBtn" class="text-gray-300 hover:text-white text-sm font-medium">Sign In</a>
-                <div id="userProfile" class="hidden flex items-center gap-2">
-                    <span id="userName" class="text-sm text-gray-300"></span>
-                    <button id="signOutBtn" class="text-gray-400 hover:text-white text-xs">Sign Out</button>
+            <div id="authContainer" class="flex items-center gap-2 ml-2 border-l border-white/10 pl-4">
+                <a href="/login" id="signInBtn" class="text-gray-300 hover:text-white text-sm font-medium transition-colors">Sign In</a>
+                <div id="userProfile" class="hidden flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs font-bold shadow-inner">
+                        <span id="userAvatar">U</span>
+                    </div>
+                    <span id="userName" class="text-sm text-gray-300 hidden md:block"></span>
+                    <button id="signOutBtn" class="text-gray-400 hover:text-white text-xs transition-colors">Sign Out</button>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- History Modal -->
-    <div id="historyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-gray-800 p-6 rounded-xl shadow-xl w-[600px] border border-gray-700 max-h-[80vh] flex flex-col">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-white">Version History</h2>
-                <button id="closeHistoryModal" class="text-gray-400 hover:text-white">
+    <div id="historyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+        <div class="bg-[#1c1c1e] p-0 rounded-2xl shadow-2xl w-[600px] border border-white/10 max-h-[80vh] flex flex-col overflow-hidden ring-1 ring-white/5">
+            <div class="flex justify-between items-center p-6 border-b border-white/10 bg-[#2c2c2e]">
+                <h2 class="text-xl font-bold text-white tracking-tight">Version History</h2>
+                <button id="closeHistoryModal" class="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
