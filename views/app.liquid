@@ -5,75 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.metaTitle | default: page.name | default: 'Untitled Page' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for sidebar */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
-<body class="bg-black min-h-screen text-white">
+<body class="bg-black min-h-screen text-white overflow-x-hidden">
 
     {% assign projectSlug = project.slug | default: project._id %}
     {% assign themeColor = project.themeColor | default: '#2563eb' %}
 
     {% if project.displayNavigation and navPages.size > 0 %}
-        {% if project.navigationStyle == 'left' %}
-            <!-- Left Sidebar Navigation -->
-            <aside class="fixed top-0 left-0 bottom-0 w-64 bg-[#1c1c1e] border-r border-white/10 p-6 z-40 overflow-y-auto">
-                <a href="/app/{{ projectSlug }}" class="block text-white font-bold text-xl tracking-tight mb-8">{{ project.name }}</a>
-                <div class="space-y-1">
-                    {% for p in navPages %}
-                        {% assign href = p.path | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
-                        {% unless p.path %}
-                            {% assign href = p._id | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
-                        {% endunless %}
-                        
-                        {% if p._id == page._id %}
-                            <a href="{{ href }}" class="block px-4 py-2 rounded-lg text-sm font-medium transition-colors" style="background-color: {{ themeColor }}; color: white;">{{ p.name }}</a>
-                        {% else %}
-                            <a href="{{ href }}" class="block px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-400 hover:bg-white/5 hover:text-white">{{ p.name }}</a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </aside>
-            
-            <!-- Content Wrapper for Left Sidebar -->
-            <div class="pl-64">
-                {{ page.code }}
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#1c1c1e]/90 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-4 z-50">
+            <div class="flex items-center gap-3">
+                <button id="mobileMenuBtn" class="text-gray-300 hover:text-white p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <span class="font-semibold text-sm tracking-tight">{{ project.name }}</span>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#1c1c1e] border-r border-white/10 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+            <div class="p-6 flex items-center justify-between">
+                <a href="/app/{{ projectSlug }}" class="text-white font-bold text-xl tracking-tight truncate">{{ project.name }}</a>
+                <!-- Mobile Close Button -->
+                <button id="mobileCloseBtn" class="md:hidden text-gray-400 hover:text-white p-1 rounded hover:bg-white/10 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
             </div>
 
-        {% else %}
-            <!-- Top Navigation -->
-            <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4">
-                <div class="max-w-7xl mx-auto flex items-center justify-between">
-                    <a href="/app/{{ projectSlug }}" class="text-white font-bold text-lg tracking-tight">{{ project.name }}</a>
-                    <div class="flex items-center gap-6 text-sm">
-                        {% for p in navPages %}
-                            {% assign href = p.path | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
-                            {% unless p.path %}
-                                {% assign href = p._id | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
-                            {% endunless %}
-
-                            {% if p._id == page._id %}
-                                <a href="{{ href }}" class="transition-colors font-medium" style="color: {{ themeColor }};">{{ p.name }}</a>
-                            {% else %}
-                                <a href="{{ href }}" class="transition-colors text-gray-400 hover:text-white">{{ p.name }}</a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
+            <nav class="flex-1 overflow-y-auto px-4 pb-4 space-y-1 scrollbar-hide">
+                {% for p in navPages %}
+                    {% assign href = p.path | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
+                    {% unless p.path %}
+                        {% assign href = p._id | prepend: '/' | prepend: projectSlug | prepend: '/app/' %}
+                    {% endunless %}
+                    
+                    {% if p._id == page._id %}
+                        <a href="{{ href }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-blue-900/10" style="background-color: {{ themeColor }}; color: white;">{{ p.name }}</a>
+                    {% else %}
+                        <a href="{{ href }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-gray-400 hover:bg-white/5 hover:text-white">{{ p.name }}</a>
+                    {% endif %}
+                {% endfor %}
             </nav>
-            <div class="h-16"></div> <!-- Spacer -->
             
-            <!-- Content Wrapper for Top Nav -->
-            <div>
-                {{ page.code }}
+            <!-- User/Footer Area (Optional) -->
+            <div class="p-4 border-t border-white/10 flex justify-between items-center">
+                <div class="text-xs text-gray-500">Powered by Builder6</div>
+                <!-- Desktop Collapse Button -->
+                <button id="desktopCollapseBtn" class="hidden md:block text-gray-400 hover:text-white p-1 rounded hover:bg-white/10 transition-colors" title="Collapse Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg>
+                </button>
             </div>
-        {% endif %}
+        </aside>
+
+        <!-- Mobile Overlay -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="min-h-screen transition-all duration-300 md:ml-64 pt-14 md:pt-0 relative">
+            <!-- Desktop Expand Button (Visible when collapsed) -->
+            <button id="desktopExpandBtn" class="fixed top-4 left-4 z-30 bg-[#1c1c1e] border border-white/10 text-white p-2 rounded-lg shadow-lg hidden hover:bg-white/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+
+            {{ page.code }}
+        </main>
+
+        <script>
+            const appSidebar = document.getElementById('appSidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+            const desktopCollapseBtn = document.getElementById('desktopCollapseBtn');
+            const desktopExpandBtn = document.getElementById('desktopExpandBtn');
+
+            // Mobile Menu Logic
+            function openMobileMenu() {
+                appSidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+                // Small delay to allow display:block to apply before opacity transition
+                setTimeout(() => sidebarOverlay.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileMenu() {
+                appSidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('opacity-0');
+                setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+                document.body.style.overflow = '';
+            }
+
+            if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+            if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileMenu);
+            if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeMobileMenu);
+
+            // Desktop Collapse Logic
+            let isCollapsed = false;
+
+            function toggleDesktopSidebar() {
+                isCollapsed = !isCollapsed;
+                if (isCollapsed) {
+                    appSidebar.classList.add('md:-translate-x-full');
+                    mainContent.classList.remove('md:ml-64');
+                    desktopExpandBtn.classList.remove('hidden');
+                } else {
+                    appSidebar.classList.remove('md:-translate-x-full');
+                    mainContent.classList.add('md:ml-64');
+                    desktopExpandBtn.classList.add('hidden');
+                }
+            }
+
+            if (desktopCollapseBtn) desktopCollapseBtn.addEventListener('click', toggleDesktopSidebar);
+            if (desktopExpandBtn) desktopExpandBtn.addEventListener('click', toggleDesktopSidebar);
+        </script>
+
     {% else %}
         <!-- No Navigation -->
         {{ page.code }}
     {% endif %}
 
     {% if editUrl %}
-        <a href="{{ editUrl }}" class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg font-medium transition-all flex items-center gap-2 hover:scale-105 active:scale-95">
+        <a href="{{ editUrl }}" class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg font-medium transition-all flex items-center gap-2 hover:scale-105 active:scale-95 opacity-50 hover:opacity-100">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-            Edit Page
+            Edit
         </a>
     {% endif %}
 
