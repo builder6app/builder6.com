@@ -8,42 +8,6 @@
     <style>
         html, body { height: 100%; margin: 0; overflow: hidden; }
         #editor { width: 100%; height: 100%; }
-        .active-layout, .active-mode { background-color: #4b5563; color: white; }
-        
-        /* Mobile Preview Styles */
-        .mobile-preview {
-            width: 375px !important;
-            height: 667px !important;
-            margin: auto;
-            border: 12px solid #1c1c1e;
-            border-radius: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .mobile-preview::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 24px;
-            background: #1c1c1e;
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-            z-index: 10;
-        }
-        
-        .mobile-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-            background-image: radial-gradient(circle at center, #1c1c1e 0%, #000 100%);
-            padding: 20px;
-        }
     </style>
 </head>
 <body class="flex flex-col h-screen bg-black text-white font-sans antialiased selection:bg-blue-500 selection:text-white overflow-hidden">
@@ -190,14 +154,19 @@
             <div class="flex-1 overflow-y-auto p-2 space-y-1">
                 {% for p in pages %}
                 <div class="group flex items-center justify-between px-3 py-2 rounded-lg text-sm {% if p._id == page._id %}bg-blue-500/10 text-blue-400{% else %}text-gray-300 hover:bg-white/5 hover:text-white{% endif %} transition-colors">
-                    <a href="/app/{{ project.slug | default: projectId }}/{{ p.path | default: p._id }}" class="flex-1 truncate flex items-center gap-2">
+                    <a href="/projects/{{ project._id }}/{{ p._id }}" class="flex-1 truncate flex items-center gap-2">
                         <span>{{ p.name | default: "Untitled Page" }}</span>
                         {% if p.homePage == p._id %}<span class="text-xs text-gray-500" title="Home Page">🏠</span>{% endif %}
                     </a>
                     {% if p._id == page._id %}
-                    <button id="pageSettingsBtnSidebar" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-white transition-opacity p-1" title="Page Settings">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                    </button>
+                    <div class="flex items-center gap-1">
+                        <button id="historyBtnSidebar" class="text-gray-400 hover:text-white transition-opacity p-1" title="History">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </button>
+                        <button id="pageSettingsBtnSidebar" class="text-gray-400 hover:text-white transition-opacity p-1" title="Page Settings">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </button>
+                    </div>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -218,6 +187,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
     <script>
+        // Sidebar Toggle Logic
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', () => {
+                const isHidden = window.getComputedStyle(sidebar).display === 'none';
+                if (isHidden) {
+                    sidebar.style.display = 'flex';
+                } else {
+                    sidebar.style.display = 'none';
+                }
+            });
+        }
+
         // 1. 默认代码模板
         const defaultCode = `<div class="min-h-screen bg-[#000000] flex items-center justify-center font-sans antialiased">
   <div class="w-80 bg-[#1c1c1e] rounded-[2rem] p-6 shadow-2xl border border-white/10 relative overflow-hidden">
@@ -573,10 +557,7 @@
                     // 2. 更新 URL
                     const projectId = window.PROJECT_ID || (window.PAGE && window.PAGE.projectId);
                     if (projectId) {
-                        const projectSlug = window.PROJECT_SLUG || projectId;
-                        const pageSlug = data.path || data._id;
-                        const newPath = '/app/' + projectSlug + '/' + pageSlug;
-                        const newUrl = window.location.origin + newPath;
+                        const newPath = '/projects/' + projectId + '/' + data._id;
                         window.history.pushState(null, '', newPath);
                     }
                     
@@ -627,17 +608,20 @@
         const historyModal = document.getElementById('historyModal');
         const historyList = document.getElementById('historyList');
         const closeHistoryModal = document.getElementById('closeHistoryModal');
+        const historyBtn = document.getElementById('historyBtn') || document.getElementById('historyBtnSidebar');
 
-        document.getElementById('historyBtn').addEventListener('click', async () => {
-            if (!currentPageId) {
-                alert('Please save your page first to see history.');
-                return;
-            }
+        if (historyBtn) {
+            historyBtn.addEventListener('click', async () => {
+                if (!currentPageId) {
+                    alert('Please save your page first to see history.');
+                    return;
+                }
 
-            historyModal.classList.remove('hidden');
-            historyModal.classList.add('flex');
-            loadHistory();
-        });
+                historyModal.classList.remove('hidden');
+                historyModal.classList.add('flex');
+                loadHistory();
+            });
+        }
 
         closeHistoryModal.addEventListener('click', () => {
             historyModal.classList.add('hidden');
@@ -702,44 +686,6 @@
         const previewInner = document.getElementById('preview-inner');
         const previewFrame = document.getElementById('preview');
 
-        // Layout Switching
-        document.getElementById('layoutLeftRight').addEventListener('click', () => setLayout('horizontal'));
-        document.getElementById('layoutTopBottom').addEventListener('click', () => setLayout('vertical'));
-        document.getElementById('layoutPreview').addEventListener('click', () => setLayout('preview'));
-
-        function setLayout(mode) {
-            // Update Buttons
-            document.getElementById('layoutLeftRight').classList.toggle('active-layout', mode === 'horizontal');
-            document.getElementById('layoutTopBottom').classList.toggle('active-layout', mode === 'vertical');
-            document.getElementById('layoutPreview').classList.toggle('active-layout', mode === 'preview');
-
-            // Reset classes
-            mainContainer.classList.remove('flex-col', 'flex-row');
-            editorWrapper.classList.remove('w-full', 'h-1/2', 'border-b', 'w-1/2', 'h-full', 'border-r', 'hidden');
-            previewWrapper.classList.remove('w-full', 'h-1/2', 'w-1/2', 'h-full');
-
-            // Update Container
-            if (mode === 'horizontal') {
-                mainContainer.classList.add('flex-row');
-                editorWrapper.classList.add('w-1/2', 'h-full', 'border-r');
-                previewWrapper.classList.add('w-1/2', 'h-full');
-            } else if (mode === 'vertical') {
-                mainContainer.classList.add('flex-col');
-                editorWrapper.classList.add('w-full', 'h-1/2', 'border-b');
-                previewWrapper.classList.add('w-full', 'h-1/2');
-            } else if (mode === 'preview') {
-                mainContainer.classList.add('flex-row'); // Default flex direction
-                editorWrapper.classList.add('hidden');
-                previewWrapper.classList.add('w-full', 'h-full');
-            }
-            
-            // Trigger resize for Monaco Editor
-            if (editor) editor.layout();
-        }
-
-        // Preview Mode Switching
-        document.getElementById('modeDesktop').addEventListener('click', () => setPreviewMode('desktop'));
-        document.getElementById('modeMobile').addEventListener('click', () => setPreviewMode('mobile'));
         document.getElementById('openNewTab').addEventListener('click', () => {
             // If we have a saved page, open the live URL
             if (currentPageId && window.PROJECT_ID) {
@@ -776,24 +722,6 @@
             const url = URL.createObjectURL(blob);
             window.open(url, '_blank');
         });
-
-        function setPreviewMode(mode) {
-            // Update Buttons
-            document.getElementById('modeDesktop').classList.toggle('active-mode', mode === 'desktop');
-            document.getElementById('modeMobile').classList.toggle('active-mode', mode === 'mobile');
-
-            if (mode === 'mobile') {
-                previewWrapper.classList.add('mobile-wrapper');
-                previewInner.classList.remove('absolute', 'inset-0');
-                previewInner.classList.add('mobile-preview');
-                previewFrame.classList.add('rounded-2xl'); // Match border radius
-            } else {
-                previewWrapper.classList.remove('mobile-wrapper');
-                previewInner.classList.add('absolute', 'inset-0');
-                previewInner.classList.remove('mobile-preview');
-                previewFrame.classList.remove('rounded-2xl');
-            }
-        }
 
                 // 7. Auth Logic
         const signInBtn = document.getElementById('signInBtn');
@@ -863,9 +791,7 @@
                 });
                 if (response.ok) {
                     const page = await response.json();
-                    const projectSlug = window.PROJECT_SLUG || projectId;
-                    const pageSlug = page.path || page._id;
-                    window.location.href = '/app/' + projectSlug + '/' + pageSlug;
+                    window.location.href = '/projects/' + projectId + '/' + page._id;
                 } else {
                     alert('Failed to create page');
                 }
