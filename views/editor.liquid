@@ -198,6 +198,41 @@
         </div>
     </main>
 
+    <!-- AI Chat Button -->
+    <button id="aiChatBtn" class="fixed bottom-6 right-6 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all z-40 group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+    </button>
+
+    <!-- AI Chat Modal -->
+    <div id="aiChatModal" class="fixed bottom-24 right-6 w-96 bg-[#1c1c1e] rounded-2xl shadow-2xl border border-white/10 hidden flex-col z-40 overflow-hidden ring-1 ring-white/5" style="height: 500px;">
+        <div class="p-4 border-b border-white/10 bg-[#2c2c2e] flex justify-between items-center">
+            <h3 class="font-bold text-white flex items-center gap-2">
+                <span class="text-xl">✨</span> AI Assistant
+            </h3>
+            <button id="closeAiChat" class="text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div id="aiChatMessages" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center text-xs flex-shrink-0">AI</div>
+                <div class="bg-white/10 rounded-2xl rounded-tl-none px-4 py-2 text-sm text-gray-200">
+                    Hi! I can help you design or modify your page. What would you like to do?
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-white/10 bg-[#2c2c2e]">
+            <div class="relative">
+                <textarea id="aiChatInput" rows="1" class="w-full bg-black/20 border border-white/10 rounded-xl pl-4 pr-10 py-3 text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none transition-colors resize-none text-sm" placeholder="Describe what you want..."></textarea>
+                <button id="aiChatSend" class="absolute right-2 top-2 p-1.5 text-purple-500 hover:text-purple-400 transition-colors rounded-lg hover:bg-white/5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
     <script>
@@ -827,7 +862,101 @@
             }
         }
 
+        // AI Chat Logic
+        const aiChatBtn = document.getElementById('aiChatBtn');
+        const aiChatModal = document.getElementById('aiChatModal');
+        const closeAiChat = document.getElementById('closeAiChat');
+        const aiChatInput = document.getElementById('aiChatInput');
+        const aiChatSend = document.getElementById('aiChatSend');
+        const aiChatMessages = document.getElementById('aiChatMessages');
 
+        function toggleAiChat() {
+            aiChatModal.classList.toggle('hidden');
+            aiChatModal.classList.toggle('flex');
+            if (!aiChatModal.classList.contains('hidden')) {
+                setTimeout(() => aiChatInput.focus(), 100);
+            }
+        }
+
+        if (aiChatBtn) aiChatBtn.addEventListener('click', toggleAiChat);
+        if (closeAiChat) closeAiChat.addEventListener('click', toggleAiChat);
+
+        function addMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = 'flex gap-3 ' + (role === 'user' ? 'flex-row-reverse' : '');
+            
+            const avatar = role === 'user' 
+                ? `<div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs flex-shrink-0">You</div>`
+                : `<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center text-xs flex-shrink-0">AI</div>`;
+            
+            const bubble = `<div class="${role === 'user' ? 'bg-blue-600 text-white' : 'bg-white/10 text-gray-200'} rounded-2xl ${role === 'user' ? 'rounded-tr-none' : 'rounded-tl-none'} px-4 py-2 text-sm whitespace-pre-wrap">${text}</div>`;
+            
+            div.innerHTML = role === 'user' ? bubble + avatar : avatar + bubble;
+            aiChatMessages.appendChild(div);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+
+        async function handleAiSend() {
+            const prompt = aiChatInput.value.trim();
+            if (!prompt) return;
+
+            addMessage('user', prompt);
+            aiChatInput.value = '';
+            aiChatInput.style.height = 'auto';
+
+            // Show loading
+            const loadingId = 'ai-loading-' + Date.now();
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = loadingId;
+            loadingDiv.className = 'flex gap-3';
+            loadingDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center text-xs flex-shrink-0">AI</div>
+                <div class="bg-white/10 rounded-2xl rounded-tl-none px-4 py-2 text-sm text-gray-200 flex items-center gap-2">
+                    <span>Thinking</span>
+                    <span class="animate-bounce">.</span><span class="animate-bounce delay-100">.</span><span class="animate-bounce delay-200">.</span>
+                </div>
+            `;
+            aiChatMessages.appendChild(loadingDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+            try {
+                const currentCode = editor.getValue();
+                const response = await fetch('/api/ai/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, currentCode })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (response.ok && data.code) {
+                    addMessage('ai', 'I have updated the code based on your request.');
+                    editor.setValue(data.code);
+                } else {
+                    addMessage('ai', 'Sorry, something went wrong: ' + (data.message || 'Unknown error'));
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById(loadingId).remove();
+                addMessage('ai', 'Sorry, I encountered a network error.');
+            }
+        }
+
+        if (aiChatSend) aiChatSend.addEventListener('click', handleAiSend);
+        if (aiChatInput) {
+            aiChatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleAiSend();
+                }
+            });
+            // Auto resize
+            aiChatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
     </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InterfaceModule } from './interfaces/interface.module';
 import { AuthModule } from './auth/auth.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     InterfaceModule, 
-    AuthModule
+    AuthModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [AppService],
