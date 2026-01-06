@@ -7,6 +7,10 @@ export class AiService {
   private openai: OpenAI;
 
   constructor(private configService: ConfigService) {
+    if (!this.configService.get<string>('OPENAI_API_KEY')) {
+      console.error('OPENAI_API_KEY is not set in the environment variables');
+      return;
+    }
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
       baseURL: this.configService.get<string>('OPENAI_BASE_URL'),
