@@ -1,24 +1,24 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<linearGradient id="g_blue" x1="50" y1="90" x2="110" y2="150" gradientUnits="userSpaceOnUse">
+<linearGradient id="g_blue_full" x1="50" y1="90" x2="110" y2="150" gradientUnits="userSpaceOnUse">
 <stop stop-color="#4285F4"/><stop offset="1" stop-color="#3367D6"/>
 </linearGradient>
-<linearGradient id="g_red" x1="100" y1="40" x2="160" y2="100" gradientUnits="userSpaceOnUse">
+<linearGradient id="g_red_full" x1="100" y1="40" x2="160" y2="100" gradientUnits="userSpaceOnUse">
 <stop stop-color="#EA4335"/><stop offset="1" stop-color="#C5221F"/>
 </linearGradient>
-<linearGradient id="g_green" x1="100" y1="140" x2="160" y2="210" gradientUnits="userSpaceOnUse">
+<linearGradient id="g_green_full" x1="100" y1="140" x2="160" y2="210" gradientUnits="userSpaceOnUse">
 <stop stop-color="#34A853"/><stop offset="1" stop-color="#188038"/>
 </linearGradient>
-<linearGradient id="g_yellow" x1="140" y1="90" x2="210" y2="150" gradientUnits="userSpaceOnUse">
+<linearGradient id="g_yellow_full" x1="140" y1="90" x2="210" y2="150" gradientUnits="userSpaceOnUse">
 <stop stop-color="#FBBC05"/><stop offset="1" stop-color="#F29900"/>
 </linearGradient>
 </defs>
 
-<circle cx="78" cy="128" r="46" fill="url(#g_blue)"/>
+<circle cx="56" cy="128" r="50" fill="url(#g_blue_full)"/>
 
-<circle cx="128" cy="78" r="46" fill="url(#g_red)"/>
+<circle cx="128" cy="56" r="50" fill="url(#g_red_full)"/>
 
-<circle cx="128" cy="178" r="46" fill="url(#g_green)"/>
+<circle cx="128" cy="200" r="50" fill="url(#g_green_full)"/>
 
-<circle cx="178" cy="128" r="46" fill="url(#g_yellow)"/>
+<circle cx="200" cy="128" r="50" fill="url(#g_yellow_full)"/>
 </svg>
