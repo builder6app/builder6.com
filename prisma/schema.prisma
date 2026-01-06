@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("PLAY_MONGODB_URI")
+}
+
+model Builder6Object {
+  id          String   @id @map("_id")
+  projectId   String?
+  name        String
+  label       String
+  description String?
+  icon        String?
+  schema      String
+  owner       String?
+  created     DateTime @default(now())
+  modified    DateTime @updatedAt
+
+  @@map("builder6_objects")
+}
+
+model Page {
+  id              String   @id @map("_id")
+  projectId       String?
+  name            String?
+  code            String
+  metaTitle       String?
+  slug            String?
+  addToNavigation Boolean?
+  sortOrder       Int?
+  owner           String?
+  created         DateTime @default(now())
+  createdBy       String?  @map("created_by")
+  modified        DateTime @updatedAt
+  modifiedBy      String?  @map("modified_by")
+
+  @@map("builder6_pages")
+}
+
+model Project {
+  id                String   @id @map("_id")
+  name              String
+  description       String?
+  slug              String?  @unique
+  homePage          String?
+  displayNavigation Boolean?
+  navigationStyle   String?
+  themeColor        String?
+  space             String?
+  icon              String?
+  owner             String?
+  created           DateTime @default(now())
+  createdBy         String?  @map("created_by")
+  modified          DateTime @updatedAt
+  modifiedBy        String?  @map("modified_by")
+
+  @@map("builder6_projects")
+}
+
+model PageVersion {
+  id         String   @id @map("_id")
+  pageId     String
+  code       String
+  versionId  String
+  owner      String?
+  created    DateTime @default(now())
+  createdBy  String?  @map("created_by")
+  modified   DateTime? @updatedAt
+  modifiedBy String?  @map("modified_by")
+
+  @@map("builder6_page_versions")
+}

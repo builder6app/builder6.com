@@ -10,6 +10,7 @@ import { ObjectsModule } from './objects/objects.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { RecordsModule } from './records/records.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RecordsModule } from './records/records.module';
       envFilePath: ['.env.local', '.env'],
       isGlobal: true,
     }),
+    PrismaModule,
     PagesModule,
     ProjectsModule,
     AuthModule,

@@ -2,13 +2,11 @@ import { Module, forwardRef } from '@nestjs/common';
 import { ObjectsController } from './objects.controller';
 import { ObjectsService } from './objects.service';
 import { AiModule } from '../ai/ai.module';
-import { DatabaseModule } from '../database/database.module';
 import { ProjectsModule } from '../projects/projects.module';
 
 @Module({
   imports: [
     AiModule, 
-    DatabaseModule,
     forwardRef(() => ProjectsModule)
   ],
   controllers: [ObjectsController],

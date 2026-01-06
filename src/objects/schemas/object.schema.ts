@@ -1,12 +1,12 @@
 export class Builder6Object {
   _id?: string;
-  projectId?: string; // Add this
+  projectId?: string | null; // Allow null to match Prisma
   name: string;
   label: string;
-  description?: string;
-  icon?: string;
+  description?: string | null;
+  icon?: string | null;
   schema: string; // The YAML content
-  owner?: string;
+  owner?: string | null;
   created: Date;
   modified: Date;
 }
