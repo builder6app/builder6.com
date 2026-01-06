@@ -3,11 +3,20 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Liquid } from 'liquidjs';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('Builder6 Play API')
+    .setDescription('The Builder6 Play API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
 
   const engine = new Liquid({
     root: join(__dirname, '..', 'views'),

@@ -9,6 +9,7 @@ import { AiModule } from './ai/ai.module';
 import { ObjectsModule } from './objects/objects.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { AccountsModule } from './accounts/accounts.module';
+import { RecordsModule } from './records/records.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AccountsModule } from './accounts/accounts.module';
     ObjectsModule,
     OrganizationsModule,
     AccountsModule,
+    RecordsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
