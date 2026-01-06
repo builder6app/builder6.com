@@ -15,7 +15,7 @@ export class ProjectService {
     return result;
   }
 
-  async create(userId: string, name: string, description?: string, slug?: string): Promise<Project> {
+  async create(userId: string, name: string, description?: string, slug?: string, spaceId?: string): Promise<Project> {
     const now = new Date();
     const id = this.generateId();
     const projectSlug = slug || id;
@@ -33,6 +33,7 @@ export class ProjectService {
       slug: projectSlug,
       displayNavigation: true,
       navigationStyle: 'left',
+      space: spaceId,
       owner: userId,
       created: now,
       created_by: userId,
@@ -43,9 +44,13 @@ export class ProjectService {
     return project;
   }
 
-  async findAll(userId: string): Promise<Project[]> {
+  async findAll(userId: string, spaceId?: string): Promise<Project[]> {
+    const query: any = { owner: userId };
+    if (spaceId) {
+        query.space = spaceId;
+    }
     return this.db.collection<Project>('builder6_projects')
-      .find({ owner: userId })
+      .find(query)
       .sort({ modified: -1 })
       .toArray();
   }

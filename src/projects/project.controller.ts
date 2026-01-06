@@ -22,8 +22,19 @@ export class ProjectController {
     if (!session) {
       return res.redirect('/login');
     }
-    const projects = await this.projectService.findAll(session.user.id);
-    return res.render('projects/index', { projects, user: session.user });
+
+    // Require active organization
+    const activeOrgId = (session.session as any).activeOrganizationId;
+    if (!activeOrgId) {
+        // If user has orgs, force them to select one/set active?
+        // But auth.service creates personal org automatically, so usually they have one.
+        // If session doesn't have it, maybe it wasn't set.
+        // Redirect to org selection or just show empty?
+        // Let's list projects for active Org + User owners
+    }
+
+    const projects = await this.projectService.findAll(session.user.id, activeOrgId);
+    return res.render('projects/index', { projects, user: session.user, activeOrgId });
   }
 
   @Get('new')

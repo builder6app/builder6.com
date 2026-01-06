@@ -21,8 +21,14 @@ export class ProjectApiController {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     
+    // Enforce active org
+    const activeOrgId = (session.session as any).activeOrganizationId;
+    if (!activeOrgId) {
+        return res.status(400).json({ message: 'No active organization selected' });
+    }
+
     try {
-        const project = await this.projectService.create(session.user.id, name, description, slug);
+        const project = await this.projectService.create(session.user.id, name, description, slug, activeOrgId);
         
         // Create default Home Page (Using correct reference if moved to PagesModule, for now keep logic here or delegate)
         const defaultCode = `<div class="min-h-screen bg-[#000000] flex items-center justify-center font-sans antialiased">

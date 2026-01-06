@@ -35,6 +35,46 @@ export class AuthService implements OnModuleInit {
         })
       ],
       database: mongodbAdapter(this.db),
+      databaseHooks: {
+        user: {
+            create: {
+                after: async (user) => {
+                    const generateId = () => {
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                        let result = '';
+                        for (let i = 0; i < 24; i++) {
+                          result += chars.charAt(Math.floor(Math.random() * chars.length));
+                        }
+                        return result;
+                    };
+
+                    const orgId = generateId();
+                    const orgName = (user.name || 'Personal') + "'s Workspace";
+                    const slug = (user.name || 'personal').toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + generateId().substring(0, 5).toLowerCase();
+
+                    const org = {
+                        _id: orgId,
+                        name: orgName,
+                        slug: slug,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    };
+
+                    const member = {
+                        _id: generateId(),
+                        organizationId: orgId,
+                        userId: user.id,
+                        role: "owner",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    };
+
+                    await this.db.collection('spaces').insertOne(org as any);
+                    await this.db.collection('space_users').insertOne(member as any);
+                }
+            }
+        }
+      },
       user: {
         modelName: 'users',
       },

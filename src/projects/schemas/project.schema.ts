@@ -7,6 +7,7 @@ export class Project {
   displayNavigation?: boolean;
   navigationStyle?: 'top' | 'left';
   themeColor?: string;
+  space?: string;
   
   // Steedos Standard Fields
   owner?: string;
