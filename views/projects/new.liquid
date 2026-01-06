@@ -29,6 +29,32 @@
                 <label class="block text-gray-400 text-sm font-medium mb-2">Description</label>
                 <textarea name="description" id="projectDescription" rows="3" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="What is this project about?"></textarea>
             </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-400 text-sm font-medium mb-2">Project Icon</label>
+                <div class="flex items-center gap-3">
+                     <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xl text-white">
+                        <i id="iconPreview" class="ri-building-4-line"></i>
+                    </div>
+                    <div class="flex-1 relative">
+                        <input type="text" id="projectIcon" name="icon" class="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder-gray-600" placeholder="e.g. ri-rocket-line">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                            <i class="ri-search-line"></i>
+                        </div>
+                    </div>
+                    <button type="button" onclick="openIconPicker('projectIcon', 'iconPreview')" class="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-gray-300 transition-colors whitespace-nowrap">
+                        Select Icon
+                    </button>
+                </div>
+                 <p class="text-xs text-gray-500 mt-1">Select an icon from the library or type a class name.</p>
+                <script>
+                    document.getElementById('projectIcon').addEventListener('input', (e) => {
+                         const icon = e.target.value.trim() || 'ri-building-4-line';
+                         document.getElementById('iconPreview').className = icon;
+                    });
+                </script>
+            </div>
+
             <div class="flex justify-end gap-3">
                 <a href="/app" class="px-4 py-2 text-gray-400 hover:text-white transition-colors">Cancel</a>
                 <button type="submit" id="createBtn" class="bg-[#007AFF] hover:bg-[#0062cc] text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
@@ -38,6 +64,8 @@
         </form>
     </div>
 
+    {% render 'partials/icon-picker.liquid' %}
+    
     <script>
         function generateSlug() {
             const name = document.getElementById('projectName').value;
@@ -60,6 +88,7 @@
             const name = document.getElementById('projectName').value;
             const slug = document.getElementById('projectSlug').value;
             const description = document.getElementById('projectDescription').value;
+            const icon = document.getElementById('projectIcon').value;
             const createBtn = document.getElementById('createBtn');
             const slugError = document.getElementById('slugError');
 
@@ -70,7 +99,7 @@
                 const res = await fetch('/api/projects', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, slug, description })
+                    body: JSON.stringify({ name, slug, description, icon })
                 });
 
                 if (res.ok) {

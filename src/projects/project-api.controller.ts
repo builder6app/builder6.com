@@ -13,7 +13,7 @@ export class ProjectApiController {
   ) {}
 
     @Post()
-  async create(@Req() req: Request, @Body('name') name: string, @Body('description') description: string, @Body('slug') slug: string, @Res() res: Response) {
+  async create(@Req() req: Request, @Body('name') name: string, @Body('description') description: string, @Body('slug') slug: string, @Body('icon') icon: string, @Res() res: Response) {
     const session = await this.authService.auth.api.getSession({
       headers: new Headers(req.headers as any),
     });
@@ -28,7 +28,7 @@ export class ProjectApiController {
     }
 
     try {
-        const project = await this.projectService.create(session.user.id, name, description, slug, activeOrgId);
+        const project = await this.projectService.create(session.user.id, name, description, slug, activeOrgId, icon);
         
         // Create default Home Page (Using correct reference if moved to PagesModule, for now keep logic here or delegate)
         const defaultCode = `<div class="min-h-screen bg-[#000000] flex items-center justify-center font-sans antialiased">

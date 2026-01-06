@@ -15,7 +15,7 @@ export class ProjectService {
     return result;
   }
 
-  async create(userId: string, name: string, description?: string, slug?: string, spaceId?: string): Promise<Project> {
+  async create(userId: string, name: string, description?: string, slug?: string, spaceId?: string, icon?: string): Promise<Project> {
     const now = new Date();
     const id = this.generateId();
     const projectSlug = slug || id;
@@ -34,6 +34,7 @@ export class ProjectService {
       displayNavigation: true,
       navigationStyle: 'left',
       space: spaceId,
+      icon,
       owner: userId,
       created: now,
       created_by: userId,

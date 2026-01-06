@@ -63,6 +63,31 @@
                     </label>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block text-gray-400 text-sm font-medium mb-2">Project Icon</label>
+                    <div class="flex items-center gap-3">
+                         <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xl text-white">
+                            <i id="iconPreview" class="{{ project.icon | default: 'ri-building-4-line' }}"></i>
+                        </div>
+                        <div class="flex-1 relative">
+                            <input type="text" id="editProjectIcon" name="icon" value="{{ project.icon }}" class="w-full bg-black/50 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder-gray-600" placeholder="e.g. ri-home-smile-line">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                                <i class="ri-search-line"></i>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openIconPicker('editProjectIcon', 'iconPreview')" class="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-gray-300 transition-colors whitespace-nowrap">
+                            Select Icon
+                        </button>
+                    </div>
+                     <p class="text-xs text-gray-500 mt-1">Select an icon from the library or type a class name.</p>
+                    <script>
+                        document.getElementById('editProjectIcon').addEventListener('input', (e) => {
+                             const icon = e.target.value.trim() || 'ri-building-4-line';
+                             document.getElementById('iconPreview').className = icon;
+                        });
+                    </script>
+                </div>
+
                 <div class="mb-8 grid grid-cols-2 gap-6">
                     <div>
                         <label class="block text-gray-400 text-sm font-medium mb-2">Navigation Style</label>
@@ -95,6 +120,8 @@
         </div>
     </div>
 
+    {% render 'partials/icon-picker.liquid' %}
+
     <script>
         async function updateProject() {
             const name = document.getElementById('editProjectName').value;
@@ -103,6 +130,7 @@
             const displayNavigation = document.getElementById('editProjectDisplayNavigation').checked;
             const navigationStyle = document.getElementById('editProjectNavigationStyle').value;
             const themeColor = document.getElementById('editProjectThemeColor').value;
+            const icon = document.getElementById('editProjectIcon').value;
              const saveBtn = document.querySelector('button[type="submit"]');
             
             saveBtn.disabled = true;
@@ -114,7 +142,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name, slug, homePage, displayNavigation, navigationStyle, themeColor }),
+                    body: JSON.stringify({ name, slug, homePage, displayNavigation, navigationStyle, themeColor, icon }),
                 });
                 
                 if (response.ok) {

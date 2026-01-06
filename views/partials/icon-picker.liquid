@@ -1,0 +1,140 @@
+<!-- Icon Picker Modal -->
+<div id="iconPickerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+    <div class="bg-[#1c1c1e] rounded-2xl shadow-2xl w-full max-w-4xl mx-4 border border-white/10 flex flex-col max-h-[80vh] ring-1 ring-white/5 overflow-hidden">
+        <div class="flex justify-between items-center p-6 border-b border-white/10 bg-[#2c2c2e]">
+            <h2 class="text-xl font-bold text-white tracking-tight">Select Icon</h2>
+            <button type="button" onclick="closeIconPicker()" class="text-gray-400 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <div class="p-4 border-b border-white/10 bg-[#1c1c1e]">
+            <div class="relative">
+                <input type="text" id="iconSearchInput" placeholder="Search icons..." class="w-full bg-black/50 border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <i class="ri-search-line text-lg"></i>
+                </div>
+            </div>
+        </div>
+
+        <div id="iconGrid" class="flex-1 overflow-y-auto p-6 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-4">
+            <!-- Icons will be injected here -->
+            <div class="col-span-full text-center text-gray-500 py-10">Loading icons...</div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/remixicons.js"></script>
+<script>
+    let currentIconInputId = null;
+    let currentPreviewId = null;
+    
+    // Infinite scroll state
+    let currentIconsList = [];
+    let renderedCount = 0;
+    const BATCH_SIZE = 100;
+
+    function openIconPicker(inputId, previewId) {
+        currentIconInputId = inputId;
+        currentPreviewId = previewId;
+        
+        const modal = document.getElementById('iconPickerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Initialize if empty or first time
+        const grid = document.getElementById('iconGrid');
+        if (grid.children.length <= 1) { // Loading state or empty
+            renderIcons(window.REMIX_ICONS);
+        }
+        
+        document.getElementById('iconSearchInput').focus();
+    }
+
+    function closeIconPicker() {
+        const modal = document.getElementById('iconPickerModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.getElementById('iconSearchInput').value = '';
+        renderIcons(window.REMIX_ICONS); // Reset filter
+    }
+
+    function selectIcon(iconName) {
+        if (currentIconInputId) {
+            const input = document.getElementById(currentIconInputId);
+            input.value = iconName;
+            input.dispatchEvent(new Event('input')); // Trigger input event for previews
+        }
+        closeIconPicker();
+    }
+
+    function renderIcons(icons) {
+        currentIconsList = icons;
+        renderedCount = 0;
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = '';
+        
+        if (icons.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-10">No icons found</div>';
+            return;
+        }
+
+        appendIcons();
+    }
+
+    function appendIcons() {
+        const grid = document.getElementById('iconGrid');
+        const nextBatch = currentIconsList.slice(renderedCount, renderedCount + BATCH_SIZE);
+        
+        if (nextBatch.length === 0) return;
+
+        const html = nextBatch.map(icon => `
+            <button onclick="selectIcon('${icon}')" class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg hover:bg-white/10 transition-colors group" title="${icon}">
+                <i class="${icon} text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                <span class="text-[10px] text-gray-500 group-hover:text-gray-300 truncate w-full text-center select-none">${icon.replace('ri-', '').replace('-line', '').replace('-fill', '')}</span>
+            </button>
+        `).join('');
+        
+        grid.insertAdjacentHTML('beforeend', html);
+        renderedCount += nextBatch.length;
+    }
+
+    // Infinite scroll listener
+    document.getElementById('iconGrid').addEventListener('scroll', function() {
+        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 200) {
+            appendIcons();
+        }
+    });
+
+    // Debounce function
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Search Logic
+    document.getElementById('iconSearchInput').addEventListener('input', debounce((e) => {
+        const query = e.target.value.toLowerCase();
+        if (!query) {
+            renderIcons(window.REMIX_ICONS);
+            return;
+        }
+        
+        const filtered = window.REMIX_ICONS.filter(icon => icon.includes(query));
+        renderIcons(filtered);
+    }, 300));
+
+    // Close on click outside
+    document.getElementById('iconPickerModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('iconPickerModal')) {
+            closeIconPicker();
+        }
+    });
+</script>
