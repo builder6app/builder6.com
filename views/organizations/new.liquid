@@ -25,7 +25,7 @@
             </div>
 
             <div class="pt-4 flex items-center justify-end gap-3">
-                <a href="/org" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">Cancel</a>
+                <a href="/app" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">Cancel</a>
                 <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20">
                     Create Organization
                 </button>
@@ -53,7 +53,7 @@
                     });
                     
                     if (res.ok) {
-                        window.location.href = '/org';
+                        window.location.href = '/app';
                     } else {
                         const error = await res.json();
                         $notify(error.message || 'Failed to create organization', 'error');

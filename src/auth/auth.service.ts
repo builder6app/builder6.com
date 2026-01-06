@@ -49,8 +49,10 @@ export class AuthService implements OnModuleInit {
                     };
 
                     const orgId = generateId();
-                    const orgName = (user.name || 'Personal') + "'s Workspace";
-                    const slug = (user.name || 'personal').toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + generateId().substring(0, 5).toLowerCase();
+                    const suffix = generateId().substring(0, 5);
+                    const baseName = user.name || user.email?.split('@')[0] || 'Personal';
+                    const orgName = baseName;
+                    const slug = baseName.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + suffix.toLowerCase();
 
                     const org = {
                         _id: orgId,
