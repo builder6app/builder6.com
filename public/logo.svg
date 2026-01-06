@@ -4,36 +4,45 @@
       <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
       <feOffset dx="2" dy="4" result="offsetblur"/>
       <feComponentTransfer>
-        <feFuncA type="linear" slope="0.3"/> </feComponentTransfer>
+        <feFuncA type="linear" slope="0.25"/> 
+      </feComponentTransfer>
       <feMerge>
         <feMergeNode/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
 
-    <radialGradient id="g_blue_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
-      <stop offset="0%" stop-color="#73A6F9"/> <stop offset="100%" stop-color="#2D58BC"/> </radialGradient>
+    <clipPath id="clip_at_purple">
+      <circle cx="72" cy="96" r="50" />
+    </clipPath>
 
-    <radialGradient id="g_red_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
-      <stop offset="0%" stop-color="#FF7568"/>
-      <stop offset="100%" stop-color="#B31412"/>
-    </radialGradient>
+    <radialGradient id="r_red" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#FF7A7A"/>   <stop offset="100%" stop-color="#FF0000"/> </radialGradient>
 
-    <radialGradient id="g_green_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
-      <stop offset="0%" stop-color="#5DD27A"/>
-      <stop offset="100%" stop-color="#0D652D"/>
-    </radialGradient>
+    <radialGradient id="r_orange" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#FFC947"/>   <stop offset="100%" stop-color="#FF6D00"/> </radialGradient>
 
-    <radialGradient id="g_yellow_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
-      <stop offset="0%" stop-color="#FDE293"/>
-      <stop offset="100%" stop-color="#EA8600"/>
-    </radialGradient>
+    <radialGradient id="r_yellow" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#FFFF8D"/>   <stop offset="100%" stop-color="#FFC400"/> </radialGradient>
+
+    <radialGradient id="r_green" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#69F0AE"/>   <stop offset="100%" stop-color="#00C853"/> </radialGradient>
+
+    <radialGradient id="r_blue" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#64B5F6"/>   <stop offset="100%" stop-color="#008EFF"/> </radialGradient>
+
+    <radialGradient id="r_purple" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#E040FB"/>   <stop offset="100%" stop-color="#AA00FF"/> </radialGradient>
   </defs>
 
   <g filter="url(#soft_shadow)">
-    <circle cx="74" cy="128" r="50" fill="url(#g_blue_3d)"/>
-    <circle cx="128" cy="74" r="50" fill="url(#g_red_3d)"/>
-    <circle cx="128" cy="182" r="50" fill="url(#g_green_3d)"/>
-    <circle cx="182" cy="128" r="50" fill="url(#g_yellow_3d)"/>
+    <circle cx="128" cy="63" r="50" fill="url(#r_red)"/>
+    <circle cx="184" cy="96" r="50" fill="url(#r_orange)"/>
+    <circle cx="184" cy="160" r="50" fill="url(#r_yellow)"/>
+    <circle cx="128" cy="193" r="50" fill="url(#r_green)"/>
+    <circle cx="72" cy="160" r="50" fill="url(#r_blue)"/>
+    <circle cx="72" cy="96" r="50" fill="url(#r_purple)"/>
+
+    <circle cx="128" cy="63" r="50" fill="url(#r_red)" clip-path="url(#clip_at_purple)"/>
   </g>
 </svg>
