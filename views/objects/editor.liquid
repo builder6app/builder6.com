@@ -33,6 +33,18 @@
             </div>
         </div>
         
+        <!-- View Switcher -->
+        <div class="bg-black/20 p-1 rounded-lg flex items-center border border-white/5">
+             <button id="viewBtnDesign" class="px-3 py-1 rounded-md text-sm font-medium bg-white/10 text-white shadow-sm transition-all flex items-center gap-1.5 focus:outline-none">
+                <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Design
+             </button>
+             <button id="viewBtnCode" class="px-3 py-1 rounded-md text-sm font-medium text-gray-400 hover:text-white transition-all flex items-center gap-1.5 focus:outline-none">
+                <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                Code
+             </button>
+        </div>
+        
         <div class="flex items-center gap-4">
             <button onclick="copyToClipboard()" class="text-xs bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded transition-colors">Copy YAML</button>
 
@@ -45,20 +57,82 @@
         </div>
     </div>
 
-    <div class="flex flex-1 overflow-hidden">
-        <!-- Sidebar Removed -->
+    <div class="flex flex-1 overflow-hidden relative">
 
-        <!-- Main Content / Code Editor -->
-        <div id="editorWrapper" class="flex-1 flex flex-col bg-[#1c1c1e] border-r border-white/10 relative">
-            <div id="editor-container" class="flex-1 relative"></div>
-        </div>
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 relative">
+             <div class="flex-1 relative flex">
+                 <!-- Code Editor View (Hidden by default or toggled) -->
+                 <div id="codeView" class="hidden absolute inset-0 z-10 bg-[#1c1c1e] flex flex-col">
+                    <div id="editor-container" class="flex-1"></div>
+                 </div>
 
-        <!-- Preview -->
-        <div id="previewWrapper" class="flex-1 bg-white relative min-w-0">
-            <!-- This iframe will host the rendered Object form/list preview -->
-            <div class="absolute inset-0 bg-gray-50 flex items-center justify-center text-gray-400">
-                <iframe id="preview" class="w-full h-full border-none"></iframe>
-            </div>
+                 <!-- Designer View -->
+                 <div id="designView" class="absolute inset-0 z-0 flex flex-row bg-gray-100">
+                     <!-- Components Toolbox -->
+                    <div class="w-48 bg-white border-r border-gray-200 flex flex-col z-10 flex-shrink-0">
+                        <div class="p-4 border-b border-gray-100 font-semibold text-xs uppercase tracking-wider text-gray-500">
+                            Fields
+                        </div>
+                        <div id="fieldsPalette" class="flex-1 overflow-y-auto p-2 space-y-2">
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="text">
+                                <span class="material-icons text-gray-400 text-sm">text_fields</span> Text
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="textarea">
+                                <span class="material-icons text-gray-400 text-sm">notes</span> Text Area
+                            </div>
+                        <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="select">
+                                <span class="material-icons text-gray-400 text-sm">list</span> Select
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="boolean">
+                                <span class="material-icons text-gray-400 text-sm">check_box</span> Checkbox
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="date">
+                                <span class="material-icons text-gray-400 text-sm">event</span> Date
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="number">
+                                <span class="material-icons text-gray-400 text-sm">123</span> Number
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="currency">
+                                <span class="material-icons text-gray-400 text-sm">attach_money</span> Currency
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="lookup">
+                                <span class="material-icons text-gray-400 text-sm">search</span> Lookup
+                            </div>
+                            <div class="palette-item bg-gray-50 border border-gray-200 hover:border-blue-500 hover:shadow-sm rounded p-2 text-sm text-gray-700 cursor-grab flex items-center gap-2 select-none" data-type="master_detail">
+                                <span class="material-icons text-gray-400 text-sm">link</span> Master-Detail
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Area -->
+                    <div class="flex-1 overflow-y-auto p-8 relative flex flex-col items-center justify-start bg-gray-50/50">
+                        <div id="designerCanvas" class="w-full max-w-2xl bg-white min-h-[500px] rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                            <!-- Header -->
+                            <div id="canvasHeader" class="border-b border-gray-100 bg-gray-50/50 px-6 py-4 flex items-center gap-3 rounded-t-xl">
+                                <!-- Header content generated dynamically -->
+                            <div class="w-10 h-10 rounded-lg bg-gray-200 animate-pulse"></div>
+                            <div class="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                            
+                            <!-- Drop Zone -->
+                            <div id="formFields" class="flex-1 p-6 space-y-4 min-h-[200px]">
+                                <!-- Fields go here -->
+                                <div class="text-center text-gray-400 py-10">Start by dropping fields here...</div>
+                            </div>
+
+                            <!-- Actions Footer -->
+                            <div class="p-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50 rounded-b-xl">
+                                <div class="h-9 w-20 bg-gray-200 rounded opacity-60"></div>
+                                <div class="h-9 w-20 bg-blue-200 rounded opacity-60"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-xs text-gray-400">
+                            Drag fields from the left to add. Drag fields here to reorder.
+                        </div>
+                    </div>
+                 </div>
+             </div>
         </div>
 
         <!-- AI Chat Sidebar -->
@@ -101,6 +175,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
     <script>
         const isNew = {{ isNew | default: false }};
@@ -109,6 +184,45 @@
         const initialSchema = {{ object.schema | json | default: "''" }};
 
         let editor;
+
+        // 3. View Switcher Logic
+        const viewBtnDesign = document.getElementById('viewBtnDesign');
+        const viewBtnCode = document.getElementById('viewBtnCode');
+        const codeView = document.getElementById('codeView');
+        const designView = document.getElementById('designView');
+
+        function switchView(view) {
+            if (view === 'design') {
+                codeView.classList.add('hidden');
+                codeView.classList.remove('flex');
+                designView.classList.remove('hidden');
+                
+                viewBtnDesign.classList.remove('text-gray-400', 'bg-transparent');
+                viewBtnDesign.classList.add('bg-white/10', 'text-white', 'shadow-sm');
+                
+                viewBtnCode.classList.add('text-gray-400', 'bg-transparent');
+                viewBtnCode.classList.remove('bg-white/10', 'text-white', 'shadow-sm');
+                
+                // Refresh designer from code
+                updatePreview();
+            } else {
+                designView.classList.add('hidden');
+                codeView.classList.remove('hidden');
+                codeView.classList.add('flex'); // codeView needs flex for monaco to fill
+                
+                viewBtnCode.classList.remove('text-gray-400', 'bg-transparent');
+                viewBtnCode.classList.add('bg-white/10', 'text-white', 'shadow-sm');
+                
+                viewBtnDesign.classList.add('text-gray-400', 'bg-transparent');
+                viewBtnDesign.classList.remove('bg-white/10', 'text-white', 'shadow-sm');
+                
+                // Refresh editor layout
+                if (editor) editor.layout();
+            }
+        }
+
+        viewBtnDesign.addEventListener('click', () => switchView('design'));
+        viewBtnCode.addEventListener('click', () => switchView('code'));
 
         // 1. Initialize Monaco Editor
         require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
@@ -127,159 +241,240 @@
             // Listen for changes
             editor.onDidChangeModelContent(() => {
                 updateSaveButtonState();
-                updatePreview();
+                // If design view is active, update it
+                if (!designView.classList.contains('hidden')) {
+                     if (window.previewTimeout) clearTimeout(window.previewTimeout);
+                     window.previewTimeout = setTimeout(updatePreview, 500);
+                }
             });
 
             updateSaveButtonState();
-            updatePreview();
+            setTimeout(updatePreview, 500); // Initial load
+            initDragAndDrop(); // Init Palette DnD
         });
 
-        // 2. Preview Logic
+        // 2. Preview & Designer Logic
+        let sortableCanvas = null;
+
         function updatePreview() {
             const schema = editor.getValue();
-            const previewFrame = document.getElementById('preview');
-            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            const header = document.getElementById('canvasHeader');
+            const fieldsContainer = document.getElementById('formFields');
 
             try {
                 const obj = jsyaml.load(schema);
                 
                 if (!obj) {
-                    renderEmpty(doc, 'Start typing to see preview...');
+                    // renderEmpty(doc, 'Start typing to see preview...');
                     return;
                 }
 
-                renderForm(doc, obj);
+                // Render Header
+                renderHeader(header, obj);
+                
+                // Render Fields
+                renderFields(fieldsContainer, obj);
+
+                 // Re-init Sortable on the new list
+                 initCanvasSortable();
+
             } catch (e) {
-                renderError(doc, e.message);
+                // Should show error in designer area
+                console.error(e);
             }
         }
 
-        function renderForm(doc, obj) {
+        function renderHeader(container, obj) {
+             const label = obj.label || obj.name || 'Untitled Object';
+             const icon = obj.icon || 'cube';
+             
+             container.innerHTML = `
+                <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
+                    <span class="material-icons text-xl">${icon.substring(0,2)}</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold text-gray-900">${label}</h1>
+                    <p class="text-xs text-gray-500">New Record</p>
+                </div>
+             `;
+        }
+
+        function renderFields(container, obj) {
             const fields = obj.fields || {};
-            const label = obj.label || obj.name || 'Untitled Object';
-            const icon = obj.icon || 'cube';
-
-            let fieldsHtml = '';
+            let html = '';
             
-            for (const [key, field] of Object.entries(fields)) {
-                fieldsHtml += generateFieldHtml(key, field);
+            // Convert to array to preserve order if YAML parser respects it (js-yaml usually does for objects)
+            // But to be Sortable compliant, we need data attributes on elements to map back to field names
+            const fieldKeys = Object.keys(fields);
+            
+            if (fieldKeys.length === 0) {
+                 container.innerHTML = '<div class="text-center text-gray-400 py-10 border-2 border-dashed border-gray-100 rounded-lg">Drag fields here</div>';
+                 return;
             }
 
-            const html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <script src="https://cdn.tailwindcss.com"><\/script>
-                    <style>
-                        body { background-color: #f9fafb; }
-                    </style>
-                </head>
-                <body class="p-6">
-                    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <!-- Header -->
-                        <div class="border-b border-gray-100 bg-gray-50/50 px-6 py-4 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
-                                <span class="material-icons text-xl">${icon.substring(0,2)}</span>
-                            </div>
-                            <div>
-                                <h1 class="text-lg font-semibold text-gray-900">${label}</h1>
-                                <p class="text-xs text-gray-500">New Record</p>
-                            </div>
-                        </div>
+            fieldKeys.forEach(key => {
+                const field = fields[key];
+                html += generateDesignerFieldHtml(key, field);
+            });
 
-                        <!-- Form -->
-                        <div class="p-6 space-y-6">
-                            ${fieldsHtml || '<p class="text-center text-gray-400 py-8">No fields defined yet.</p>'}
-                            
-                            <!-- Actions -->
-                            <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
-                                <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-sm">Cancel</button>
-                                <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            doc.open();
-            doc.write(html);
-            doc.close();
+            container.innerHTML = html;
         }
 
-        function generateFieldHtml(key, field) {
+        function generateDesignerFieldHtml(key, field) {
             const label = field.label || key;
             const required = field.required ? '<span class="text-red-500">*</span>' : '';
-            const help = field.help ? `<p class="mt-1 text-xs text-gray-500">${field.help}</p>` : '';
-            
+           
             let inputHtml = '';
-
+            // Simplified read-only representation for designer
             switch (field.type) {
                 case 'textarea':
-                    inputHtml = `<textarea class="w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5 min-h-[100px]" placeholder="Enter ${label.toLowerCase()}..."></textarea>`;
-                    break;
-                case 'select':
-                    const options = field.options || [];
-                    const optionsHtml = options.map(opt => {
-                        const val = typeof opt === 'object' ? opt.value : opt;
-                        const lbl = typeof opt === 'object' ? opt.label : opt;
-                        return `<option value="${val}">${lbl}</option>`;
-                    }).join('');
-                    inputHtml = `
-                        <select class="w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5 bg-white">
-                            <option value="">Select an option...</option>
-                            ${optionsHtml}
-                        </select>`;
+                    inputHtml = `<div class="w-full h-20 rounded-lg border border-gray-300 bg-gray-50"></div>`;
                     break;
                 case 'boolean':
-                    inputHtml = `
-                        <div class="flex items-center h-6 mt-2">
-                            <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600">
-                            <span class="ml-2 text-sm text-gray-600">Yes, enable this option</span>
-                        </div>`;
+                    inputHtml = `<div class="flex items-center gap-2"><div class="w-4 h-4 border border-gray-300 rounded bg-gray-50"></div><span class="text-sm text-gray-500">Checkbox</span></div>`;
                     break;
-                case 'date':
-                case 'datetime':
-                    inputHtml = `<input type="date" class="w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5">`;
+                case 'select':
+                    inputHtml = `<div class="w-full h-9 rounded-lg border border-gray-300 bg-gray-50 flex items-center px-3 justify-between"><span class="text-sm text-gray-400">Select...</span><span class="material-icons text-gray-400 text-sm">arrow_drop_down</span></div>`;
                     break;
-                default: // text, number, etc.
-                    inputHtml = `<input type="text" class="w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5" placeholder="Enter ${label.toLowerCase()}...">`;
+                case 'lookup':
+                case 'master_detail':
+                    inputHtml = `<div class="w-full h-9 rounded-lg border border-gray-300 bg-gray-50 flex items-center px-3 justify-between">
+                        <span class="text-sm text-gray-400">Search ${field.reference_to || 'records'}...</span>
+                        <span class="material-icons text-gray-400 text-sm">search</span>
+                    </div>`;
+                    break;
+                default: 
+                    inputHtml = `<div class="w-full h-9 rounded-lg border border-gray-300 bg-gray-50"></div>`;
             }
 
             return `
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">${label} ${required}</label>
+                <div class="field-item p-3 -mx-3 rounded-lg hover:bg-blue-50 group border border-transparent hover:border-blue-100 cursor-move transition-colors relative" data-id="${key}">
+                    <div class="mb-1 flex justify-between items-center">
+                        <label class="block text-sm font-medium text-gray-700">${label} ${required}</label>
+                         <button class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity" title="Delete" onclick="deleteField('${key}')">
+                            <span class="material-icons text-sm">delete</span>
+                        </button>
+                    </div>
                     ${inputHtml}
-                    ${help}
                 </div>
             `;
         }
-
-        function renderEmpty(doc, msg) {
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"><\/script></head>
-                <body class="h-screen flex items-center justify-center bg-gray-50 text-gray-400 text-sm">
-                    ${msg}
-                </body></html>
-            `);
-            doc.close();
+        
+        // Initial DnD setup
+        function initDragAndDrop() {
+            const palette = document.getElementById('fieldsPalette');
+            if (palette) {
+                new Sortable(palette, {
+                    group: {
+                        name: 'fields',
+                        pull: 'clone',
+                        put: false 
+                    },
+                    sort: false, // Palette is not sortable
+                    animation: 150
+                });
+            }
         }
 
-        function renderError(doc, msg) {
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"><\/script></head>
-                <body class="p-6 bg-red-50 h-screen">
-                    <div class="text-red-600 font-mono text-sm bg-white p-4 rounded-lg shadow-sm border border-red-200">
-                        <strong>YAML Error:</strong><br/>${msg}
-                    </div>
-                </body></html>
-            `);
-            doc.close();
+        function initCanvasSortable() {
+             const formFields = document.getElementById('formFields');
+             if (!formFields) return;
+
+             // Destroy old instance if exists to avoid dupes
+             if (sortableCanvas) sortableCanvas.destroy();
+
+             sortableCanvas = new Sortable(formFields, {
+                group: 'fields',
+                animation: 150,
+                ghostClass: 'bg-blue-100',
+                onAdd: function (evt) {
+                    const item = evt.item; // The dragged element
+                    const type = item.getAttribute('data-type');
+                    
+                    // Generate new field name
+                    const fieldName = generateFieldName(type);
+                    
+                    // Remove the dragged DOM element immediately, we will regenerate from YAML
+                    item.remove();
+                    
+                    // Add to YAML
+                    addFieldToYaml(fieldName, type, evt.newIndex);
+                },
+                onSort: function (evt) {
+                     // Check if it's a reorder within the list (not an add)
+                     if (evt.from === evt.to && evt.oldIndex !== evt.newIndex) {
+                         reorderFieldsInYaml(evt.oldIndex, evt.newIndex);
+                     }
+                }
+            });
         }
+
+        function generateFieldName(type) {
+            // Simple random or existing check could be added
+            return type + '_' + Math.random().toString(36).substr(2, 5);
+        }
+
+        function addFieldToYaml(name, type, index) {
+            const schema = editor.getValue();
+            try {
+                let obj = jsyaml.load(schema) || {};
+                if (!obj.fields) obj.fields = {};
+                
+                // Create new field object
+                const newField = {
+                    label: name.charAt(0).toUpperCase() + name.slice(1).split('_')[0],
+                    type: type
+                };
+                
+                // Need to insert at specific index.
+                // Objects in JS/YAML are unordered by spec, but implementation often respects insertion order.
+                // We'll reconstruct the fields object.
+                const entries = Object.entries(obj.fields);
+                entries.splice(index, 0, [name, newField]);
+                
+                const newFields = {};
+                entries.forEach(([k, v]) => newFields[k] = v);
+                obj.fields = newFields;
+
+                // Dump
+                const newYaml = jsyaml.dump(obj);
+                editor.setValue(newYaml);
+                // Preview will auto update via listener
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function reorderFieldsInYaml(oldIndex, newIndex) {
+            const schema = editor.getValue();
+            try {
+                let obj = jsyaml.load(schema) || {};
+                if (!obj.fields) return;
+
+                const entries = Object.entries(obj.fields);
+                const [moved] = entries.splice(oldIndex, 1);
+                entries.splice(newIndex, 0, moved);
+
+                const newFields = {};
+                entries.forEach(([k, v]) => newFields[k] = v);
+                obj.fields = newFields;
+
+                const newYaml = jsyaml.dump(obj);
+                editor.setValue(newYaml);
+            } catch(e) { console.error(e); }
+        }
+
+        window.deleteField = function(key) {
+             const schema = editor.getValue();
+             try {
+                let obj = jsyaml.load(schema) || {};
+                if (obj.fields && obj.fields[key]) {
+                    delete obj.fields[key];
+                    const newYaml = jsyaml.dump(obj);
+                    editor.setValue(newYaml);
+                }
+             } catch(e) { console.error(e); }
+        };
 
         // 2. Save Logic
         function updateSaveButtonState() {
