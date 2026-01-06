@@ -8,8 +8,21 @@ export class OrganizationsController {
 
   @Get()
   async index(@Req() req: Request, @Res() res: Response) {
-    // Redirect to /app as we don't need a separate org list page
-    return res.redirect('/app');
+    const session = await this.authService.auth.api.getSession({
+        headers: new Headers(req.headers as any),
+    });
+    if (!session) {
+      return res.redirect('/login');
+    }
+
+    const organizations = await (this.authService.auth.api as any).listOrganizations({
+        headers: new Headers(req.headers as any),
+    });
+
+    return res.render('organizations/index', { 
+        user: session.user,
+        organizations
+    });
   }
 
   @Get('new')
