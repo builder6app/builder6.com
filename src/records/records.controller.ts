@@ -1,10 +1,15 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
+import { Controller, Post, Body, Param, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { RecordsService } from './records.service';
 import { FindManyDto, FindUniqueDto, CreateDto, UpdateDto, DeleteDto } from './dto/records.dto';
+import { OrgAdminGuard } from '../guards/org-admin.guard';
+import { OrgScopeInterceptor } from '../interceptors/org-scope.interceptor';
 
 @ApiTags('Records')
+@ApiBearerAuth()
 @Controller('api/records')
+@UseGuards(OrgAdminGuard)
+@UseInterceptors(OrgScopeInterceptor)
 export class RecordsController {
   constructor(private readonly recordsService: RecordsService) {}
 

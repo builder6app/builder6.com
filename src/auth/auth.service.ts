@@ -30,6 +30,15 @@ export class AuthService implements OnModuleInit {
                 },
                 member: {
                     modelName: 'space_users',
+                    fields: {
+                        organizationId: 'space',
+                        userId: 'user'
+                    }
+                },
+                invitation: {
+                    fields: {
+                        organizationId: 'space'
+                    }
                 }
             },
             async sendInvitationEmail(data) {

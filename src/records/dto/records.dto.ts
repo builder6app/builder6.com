@@ -25,7 +25,7 @@ export class FindManyDto {
         description: 'Fields to select', 
         required: false, 
         type: Object,
-        example: { id: true, title: true }
+        example: { id: true, name: true }
     })
     select?: RecordSelectInput;
 

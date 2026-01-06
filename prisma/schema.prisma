@@ -13,6 +13,7 @@ datasource db {
 model Builder6Object {
   id          String   @id @map("_id")
   projectId   String?
+  space       String?  // Organization ID
   name        String
   label       String
   description String?
@@ -28,6 +29,7 @@ model Builder6Object {
 model Page {
   id              String   @id @map("_id")
   projectId       String?
+  space           String?  // Organization ID
   name            String?
   code            String
   metaTitle       String?
@@ -66,6 +68,7 @@ model Project {
 model PageVersion {
   id         String   @id @map("_id")
   pageId     String
+  space      String?  // Organization ID
   code       String
   versionId  String
   owner      String?
@@ -76,3 +79,27 @@ model PageVersion {
 
   @@map("builder6_page_versions")
 }
+
+// Better-Auth Models mapping
+model Space {
+  id        String   @id @map("_id")
+  name      String
+  slug      String?
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("spaces")
+}
+
+model SpaceUser {
+  id             String   @id @map("_id")
+  space String   @map("space")
+  user         String   @map("user")
+  role           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime? @updatedAt
+
+  @@map("space_users")
+}
+
