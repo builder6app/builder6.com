@@ -1,24 +1,39 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<linearGradient id="g_blue_full" x1="50" y1="90" x2="110" y2="150" gradientUnits="userSpaceOnUse">
-<stop stop-color="#4285F4"/><stop offset="1" stop-color="#3367D6"/>
-</linearGradient>
-<linearGradient id="g_red_full" x1="100" y1="40" x2="160" y2="100" gradientUnits="userSpaceOnUse">
-<stop stop-color="#EA4335"/><stop offset="1" stop-color="#C5221F"/>
-</linearGradient>
-<linearGradient id="g_green_full" x1="100" y1="140" x2="160" y2="210" gradientUnits="userSpaceOnUse">
-<stop stop-color="#34A853"/><stop offset="1" stop-color="#188038"/>
-</linearGradient>
-<linearGradient id="g_yellow_full" x1="140" y1="90" x2="210" y2="150" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FBBC05"/><stop offset="1" stop-color="#F29900"/>
-</linearGradient>
-</defs>
+  <defs>
+    <filter id="soft_shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="2" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/> </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
 
-<circle cx="56" cy="128" r="50" fill="url(#g_blue_full)"/>
+    <radialGradient id="g_blue_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#73A6F9"/> <stop offset="100%" stop-color="#2D58BC"/> </radialGradient>
 
-<circle cx="128" cy="56" r="50" fill="url(#g_red_full)"/>
+    <radialGradient id="g_red_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#FF7568"/>
+      <stop offset="100%" stop-color="#B31412"/>
+    </radialGradient>
 
-<circle cx="128" cy="200" r="50" fill="url(#g_green_full)"/>
+    <radialGradient id="g_green_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#5DD27A"/>
+      <stop offset="100%" stop-color="#0D652D"/>
+    </radialGradient>
 
-<circle cx="200" cy="128" r="50" fill="url(#g_yellow_full)"/>
+    <radialGradient id="g_yellow_3d" cx="30%" cy="30%" r="70%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#FDE293"/>
+      <stop offset="100%" stop-color="#EA8600"/>
+    </radialGradient>
+  </defs>
+
+  <g filter="url(#soft_shadow)">
+    <circle cx="74" cy="128" r="50" fill="url(#g_blue_3d)"/>
+    <circle cx="128" cy="74" r="50" fill="url(#g_red_3d)"/>
+    <circle cx="128" cy="182" r="50" fill="url(#g_green_3d)"/>
+    <circle cx="182" cy="128" r="50" fill="url(#g_yellow_3d)"/>
+  </g>
 </svg>
