@@ -1,13 +1,19 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ObjectsController } from './objects.controller';
 import { ObjectsService } from './objects.service';
 import { AiModule } from '../ai/ai.module';
 import { DatabaseModule } from '../database/database.module';
+import { ProjectsModule } from '../projects/projects.module';
 
 @Module({
-  imports: [AiModule, DatabaseModule],
+  imports: [
+    AiModule, 
+    DatabaseModule,
+    forwardRef(() => ProjectsModule)
+  ],
   controllers: [ObjectsController],
   providers: [ObjectsService],
   exports: [ObjectsService], // Export ObjectsService
 })
 export class ObjectsModule {}
+

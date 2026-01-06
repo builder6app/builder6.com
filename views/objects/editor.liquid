@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Designer - Builder6</title>
+    <title>{{ project.name }} - Object Designer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html, body { height: 100%; margin: 0; overflow: hidden; }
@@ -16,6 +16,35 @@
 <body class="flex flex-col h-screen bg-black text-white font-sans antialiased selection:bg-blue-500 selection:text-white">
 
     {% render 'partials/header.liquid', is_page_editor: false, is_object_editor: true, project: project, user: user %}
+
+    <!-- Editor Toolbar -->
+    <div class="flex items-center justify-between px-6 py-2 border-b border-white/10 bg-[#1c1c1e] z-40">
+        <div class="flex items-center gap-2">
+             <div class="flex items-center gap-2">
+                <a href="/app/{{ project._id }}" class="text-sm text-gray-400 hover:text-white transition-colors">{{ project.name }}</a>
+                <span class="text-gray-600">/</span>
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    {% if isNew %}
+                    <span class="text-sm font-medium text-white">New Object</span>
+                    {% else %}
+                    <span class="text-sm font-medium text-white">{{ object.label }} ({{ object.name }})</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button onclick="copyToClipboard()" class="text-xs bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded transition-colors">Copy YAML</button>
+
+            <div class="h-6 w-px bg-white/10 mx-1"></div>
+
+            <button onclick="saveObject()" class="bg-[#007AFF] hover:bg-[#0062cc] text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 flex items-center gap-2 transform active:scale-95">
+                <span>Save Object</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+            </button>
+        </div>
+    </div>
 
     <div class="flex flex-1 overflow-hidden">
         <!-- Sidebar / Prompt Area -->
@@ -46,23 +75,9 @@
 
         <!-- Main Content / Code Editor -->
         <div class="flex-1 flex flex-col bg-[#0d0d0d] relative">
-            <div class="flex items-center justify-between px-6 py-3 border-b border-white/10 bg-[#1c1c1e]">
-                <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    {% if isNew %}
-                    <span class="text-sm font-medium text-gray-300">New Object</span>
-                    {% else %}
-                    <span class="text-sm font-medium text-gray-300">{{ object.label }} ({{ object.name }})</span>
-                    {% endif %}
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="saveObject()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                        <span>Save Object</span>
-                    </button>
-                    <button onclick="copyToClipboard()" class="text-xs bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded transition-colors">Copy</button>
-                </div>
-            </div>
+
+            <!-- Toolbar Removed -->
+
             
             <div class="flex-1 relative">
                 <textarea id="resultOutput" 
@@ -114,7 +129,7 @@
             };
 
             try {
-                const url = isNew ? '/objects' : `/objects/${objectId}`;
+                const url = isNew ? `/app/${projectId}/objects` : `/app/${projectId}/objects/${objectId}`;
                 const method = isNew ? 'POST' : 'PUT';
                 
                 const response = await fetch(url, {
@@ -129,14 +144,10 @@
                 
                 showStatus('Object saved successfully!', 'success');
                 
-                if (projectId) {
-                    setTimeout(() => {
-                        window.location.href = `/app/${projectId}`;
-                    }, 1000);
-                } else if (isNew) {
+                if (isNew) {
                      setTimeout(() => {
-                        window.location.href = `/objects/${savedObj._id}`;
-                    }, 1000);
+                        window.location.href = `/app/${projectId}/objects/${savedObj._id}`;
+                    }, 500);
                 }
             } catch (error) {
                 console.error(error);
@@ -155,7 +166,7 @@
             statusMessage.classList.add('hidden');
 
             try {
-                const response = await fetch('/objects/generate', {
+                const response = await fetch(`/app/${projectId}/objects/generate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt })

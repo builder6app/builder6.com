@@ -59,6 +59,6 @@ export class ProjectController {
     const project = await this.projectService.findOne(projectId);
     const pages = await this.PageService.findAllByProject(projectId);
 
-    return res.render('editor', { page, projectId, project, pages, user: session?.user });
+    return res.render('pages/editor', { page, projectId, project, pages, user: session?.user });
   }
 }

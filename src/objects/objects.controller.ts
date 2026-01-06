@@ -2,29 +2,45 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Render, Res, NotFoundE
 import { Response } from 'express';
 import { ObjectsService } from './objects.service';
 import { Builder6Object } from './schemas/object.schema';
+import { ProjectService } from '../projects/project.service';
 
-@Controller('objects')
+@Controller('app/:projectId/objects')
 export class ObjectsController {
-  constructor(private readonly objectsService: ObjectsService) {}
+  constructor(
+    private readonly objectsService: ObjectsService,
+    private readonly projectService: ProjectService
+  ) {}
 
   @Get()
   @Render('objects/index')
-  async index(@Query('projectId') projectId: string) {
+  async index(@Param('projectId') projectId: string) {
     const objects = await this.objectsService.findAll('mock-user-id', projectId);
+    const project = await this.projectService.findOne(projectId);
+
+    if (!project) {
+        throw new NotFoundException('Project not found');
+    }
+
     return {
       user: { name: 'Developer' },
-      project: { name: 'Object Designer' },
+      project: project,
       objects,
-      projectId // Pass for generating links
+      projectId 
     };
   }
 
   @Get('new')
   @Render('objects/editor')
-  newObject(@Query('projectId') projectId: string) {
+  async newObject(@Param('projectId') projectId: string) {
+    const project = await this.projectService.findOne(projectId);
+    
+    if (!project) {
+        throw new NotFoundException('Project not found');
+    }
+    
     return {
       user: { name: 'Developer' },
-      project: { name: 'Object Designer' },
+      project: project,
       isNew: true,
       projectId
     };
@@ -32,19 +48,24 @@ export class ObjectsController {
 
   @Get(':id')
   @Render('objects/editor')
-  async editObject(@Param('id') id: string, @Query('projectId') projectId: string) {
-    // Avoid conflict with 'generate' or other static paths if they were under :id, but 'generate' is POST /objects/generate or similar. 
-    // Wait, 'generate' is POST, but if I had GET 'generate' it would clash. 
-    // It's fine since 'new' is specific.
-    if (id === 'new') return this.newObject(projectId);
+  async editObject(@Param('id') id: string, @Param('projectId') projectId: string) {
+    // Note: :id can be 'new' if route matched improperly, but 'new' is handled above.
+    
+    if (id === 'new') return this.newObject(projectId); // Fallback if needed, though Order matters
     
     const obj = await this.objectsService.findOne(id);
+    const project = await this.projectService.findOne(projectId);
+
+    if (!project) {
+        throw new NotFoundException('Project not found');
+    }
+
     return {
       user: { name: 'Developer' },
-      project: { name: 'Object Designer' },
+      project: project,
       object: obj,
       isNew: false,
-      projectId: projectId || obj.projectId
+      projectId: projectId
     };
   }
 

@@ -42,7 +42,7 @@ export class SiteController {
     const navPages = pages.filter(p => p.addToNavigation);
     const editUrl = `/app/${project._id}/${page._id}`;
 
-    return res.render('app', { page, project, navPages, editUrl });
+    return res.render('pages/site', { page, project, navPages, editUrl });
   }
 
   @Get(':slug/p/:pageId')
@@ -62,7 +62,7 @@ export class SiteController {
     const navPages = pages.filter(p => p.addToNavigation);
     const editUrl = `/app/${project._id}/${page._id}`;
 
-    return res.render('app', { page, project, navPages, editUrl });
+    return res.render('pages/site', { page, project, navPages, editUrl });
   }
 
   @Get(':slug/:path')
@@ -96,6 +96,6 @@ export class SiteController {
     const navPages = pages.filter(p => p.addToNavigation);
     const editUrl = `/app/${project._id}/${page._id}`;
 
-    return res.render('app', { page, project, navPages, editUrl });
+    return res.render('pages/site', { page, project, navPages, editUrl });
   }
 }
