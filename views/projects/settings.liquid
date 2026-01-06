@@ -65,8 +65,8 @@
 
                 <div class="mb-6 grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-gray-400 text-sm font-medium mb-2">Project Icon</label>
-                        <div class="flex items-center gap-2">
+                         <label class="block text-gray-400 text-sm font-medium mb-2">Project Icon</label>
+                         <div class="flex items-center gap-2">
                              <div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xl text-white overflow-hidden" id="iconPreviewContainer" style="background-color: {{ project.themeColor | default: '' }}">
                                 <i id="iconPreview" class="{{ project.icon | default: 'ri-building-4-line' }}"></i>
                             </div>
@@ -75,32 +75,8 @@
                             </button>
                             <input type="hidden" id="editProjectIcon" name="icon" value="{{ project.icon }}">
                         </div>
+                         <p class="text-xs text-gray-500 mt-1">Select an icon from the library.</p>
                     </div>
-                    <div>
-                        <label class="block text-gray-400 text-sm font-medium mb-2">Theme Color</label>
-                        <div class="flex items-center gap-2">
-                             <input type="color" name="themeColor" id="editProjectColor" value="{{ project.themeColor | default: '#3b82f6' }}" oninput="updatePreviewColor(this.value)" class="h-10 w-14 bg-transparent border-0 p-0 cursor-pointer rounded-lg overflow-hidden">
-                             <input type="text" oninput="document.getElementById('editProjectColor').value = this.value; updatePreviewColor(this.value)" value="{{ project.themeColor | default: '#3b82f6' }}" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors">
-                        </div>
-                    </div>
-                </div>
-
-                <script>
-                    function updatePreviewColor(color) {
-                        const container = document.getElementById('iconPreviewContainer');
-                        if (container) {
-                            container.style.backgroundColor = color;
-                        }
-                    }
-                </script>
-                    </div>
-                     <p class="text-xs text-gray-500 mt-1">Select an icon from the library or type a class name.</p>
-                    <script>
-                        document.getElementById('editProjectIcon').addEventListener('input', (e) => {
-                             const icon = e.target.value.trim() || 'ri-building-4-line';
-                             document.getElementById('iconPreview').className = icon;
-                        });
-                    </script>
                 </div>
 
                 <div class="mb-8 grid grid-cols-2 gap-6">
@@ -115,12 +91,19 @@
                         <label class="block text-gray-400 text-sm font-medium mb-2">Theme Color</label>
                         <div class="flex items-center gap-2">
                             <input type="color" id="editProjectThemeColor" name="themeColor" value="{{ project.themeColor | default: '#2563eb' }}" class="h-10 w-10 rounded cursor-pointer bg-transparent border-0 p-0">
-                            <input type="text" id="editProjectThemeColorText" value="{{ project.themeColor | default: '#2563eb' }}" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors uppercase" onchange="document.getElementById('editProjectThemeColor').value = this.value">
+                            <input type="text" id="editProjectThemeColorText" value="{{ project.themeColor | default: '#2563eb' }}" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors uppercase" onchange="document.getElementById('editProjectThemeColor').value = this.value; updatePreviewColor(this.value);">
                         </div>
-                        <script>
+                         <script>
                             document.getElementById('editProjectThemeColor').addEventListener('input', (e) => {
                                 document.getElementById('editProjectThemeColorText').value = e.target.value.toUpperCase();
+                                updatePreviewColor(e.target.value);
                             });
+                             function updatePreviewColor(color) {
+                                const container = document.getElementById('iconPreviewContainer');
+                                if (container) {
+                                    container.style.backgroundColor = color;
+                                }
+                            }
                         </script>
                     </div>
                 </div>
