@@ -13,16 +13,30 @@ export class AuthService implements OnModuleInit {
     if (Math.random() < 0) {
       await import('better-auth');
       await import('better-auth/adapters/mongodb');
+      await import('better-auth/plugins');
     }
     const _importDynamic = new Function('modulePath', 'return import(modulePath)');
     const { betterAuth } = await _importDynamic('better-auth');
     const { mongodbAdapter } = await _importDynamic('better-auth/adapters/mongodb');
+    const { organization } = await _importDynamic('better-auth/plugins');
 
     this.auth = betterAuth({
       baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+      plugins: [
+        organization({
+            schema: {
+                organization: {
+                    modelName: 'spaces',
+                },
+                member: {
+                    modelName: 'space_users',
+                }
+            }
+        })
+      ],
       database: mongodbAdapter(this.db),
       user: {
-        modelName: 'better_users',
+        modelName: 'users',
       },
       session: {
         modelName: 'better_sessions',
